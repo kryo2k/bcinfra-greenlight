@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1= title
+  p(class="error")= error
+
+    if trace
+      div(class="trace")= trace

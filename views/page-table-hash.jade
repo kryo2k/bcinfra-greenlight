@@ -1,0 +1,13 @@
+extends page
+
+block inner-content
+  table
+    thead
+      tr
+        td(width=columns.key.width)= columns.key.caption || "key"
+        td(width=columns.value.width)= columns.value.caption || "value"
+    tbody
+      each value, key in data
+        tr
+          td(class=columns.key.class, data-align=columns.key.align)!= columns.key.renderer ? columns.key.renderer(key, data) : key
+          td(class=columns.value.class, data-align=columns.value.align)!= columns.value.renderer ? columns.value.renderer(key, data) : value

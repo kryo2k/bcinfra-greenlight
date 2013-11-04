@@ -1,0 +1,110 @@
+@import "compass/reset";
+@import url(http://fonts.googleapis.com/css?family=Share+Tech);
+
+body, html {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+body {
+    background-color: #333;
+    color: #eee;
+    padding: 3rem 3rem 1rem;
+    font-family: "Share Tech"
+}
+h1, h2, h3, h4 {
+    color: #aaa;
+    margin-bottom: 0.5rem;
+}
+h1 {
+    font-size: 1.5rem;
+}
+h2 {
+    font-size: 1.3rem;
+}
+h3 {
+    font-size: 1.1rem;
+}
+h4 {
+    font-size: 0.8rem;
+}
+.message {
+    padding: 0.5rem;
+    background-color: #555;
+    color: #eee;
+    margin-bottom: 0.5rem;
+}
+.footer {
+    color: white;
+}
+p {
+    padding: 1rem;
+
+    &.error{
+        color: orange;
+    }
+}
+.trace {
+    padding-left: 1rem;
+    font-family: monospace;
+    white-space: pre;
+}
+table {
+    display: inline-block;
+    margin: 0 0 1rem 0;
+
+    thead {
+        border: 0 solid white;
+        border-width: 2px 2px 0;
+
+        td {
+            font-weight: bold;
+            background-color: white;
+            color: black;
+            padding: 0.2rem 0.5rem;
+        }
+    }
+    tbody {
+        border: 0 solid white;
+        border-width: 0 2px 2px;
+        
+        .bad {
+            color: red;
+        }
+        .good {
+            color: grey;
+        }
+
+        td {
+            padding: 0.2rem 0.5rem;
+
+            &[data-align="left"] {
+               text-align: left;
+            }
+
+            &[data-align="center"] {
+               text-align: center;
+            }
+
+            &[data-align="right"] {
+               text-align: right;
+            }
+        }
+        tr {
+            $diff-bg: #3a3a3a;
+            $diff-fg: silver;
+
+            &:first-child td {
+                background: $diff-bg;
+                color: $diff-fg;
+            }
+            &:nth-child(2n+3) td {
+                background: $diff-bg;
+                color: $diff-fg;
+            }
+        }
+    }
+}

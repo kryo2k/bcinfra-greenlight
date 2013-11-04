@@ -1,0 +1,13 @@
+extends page
+
+block inner-content
+  table
+    thead
+      tr
+        each opts, key in columns
+          td(width=opts.width)= opts.caption || key
+    tbody
+      each item, i in data
+        tr
+          each opts, key in columns
+            td(class=opts.class, data-align=opts.align)!= opts.renderer ? opts.renderer(key, item) : item[key]
