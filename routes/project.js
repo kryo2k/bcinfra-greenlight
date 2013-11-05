@@ -3,6 +3,16 @@ util = require('util'),
 dbstore = require(__dirname + "/../lib/dbstore.js"),
 log = require(__dirname + '/../lib/log');
 
+exports.info = function(req, res) {
+    var projectId = req.param('id');
+
+    res.render('page', {
+        jsModule: 'app/project/info',
+        title: 'Project Info Page',
+        text: util.format('This page will contain more detailed information about project (%d)', projectId)
+    });
+};
+
 // lists all registered projects
 exports.listAll = function(req, res){
     var

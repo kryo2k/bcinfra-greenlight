@@ -95,63 +95,64 @@ exports.subscription = function(req, res) {
 
         if(prettyPrint) { // show as a pretty hash table:
 
-            var formSetup = {
-                action: req.url + '?prettyPrint=1',
-                method:'GET',
-                items: [
-                    {label:'Subscribe to:', type:'list', items: [
-                        {id:"1", caption: "one"},
-                        {id:"2", caption: "two"},
-                        {id:"3", caption: "three"}
-                    ]}
-                ]
-            };
+//            var formSetup = {
+//                action: req.url + '?prettyPrint=1',
+//                method:'GET',
+//                items: [
+//                    {label:'Subscribe to:', type:'list', items: [
+//                        {id:"1", caption: "one"},
+//                        {id:"2", caption: "two"},
+//                        {id:"3", caption: "three"}
+//                    ]}
+//                ]
+//            };
+//            req.app.render("form",formSetup,function(err, html){
+//            });
 
-            req.app.render("form",formSetup,function(err, html){
-                res.render('page-table-grid', {
-                    jsModule: 'app/device/subscription',
-                    title: title,
-                    data: subscription,
-                    form: html,
-                    message: msg,
-                    footer: (isSubscriptionGreen ? "Subscription has <font class='good'>green</font> light" : "Subscription is <font class='bad'>failing</font>"),
-                    columns: {
-                        id: {
-                            caption: "ID",
-                            colClass: "row-id"
-                        },
-                        name: {
-                            caption: "Project Name"
-                        },
-                        lastStatus: {
-                            caption: "Status",
-                            align: "center",
-                            renderer: function(key, data){
-                                var
-                                is_red = data.is_broken || data.is_aborted,
-                                is_green = data.is_green;
+            res.render('page-table-grid', {
+                jsModule: 'app/device/subscription',
+                title: title,
+                data: subscription,
+            //  form: html,
+                message: msg,
+                footer: (isSubscriptionGreen ? "Subscription has <font class='good'>green</font> light" : "Subscription is <font class='bad'>failing</font>"),
+                columns: {
+                    id: {
+                        caption: "ID",
+                        colClass: "row-id"
+                    },
+                    name: {
+                        caption: "Project Name"
+                    },
+                    lastStatus: {
+                        caption: "Status",
+                        align: "center",
+                        renderer: function(key, data){
+                            var
+                            is_red = data.is_broken || data.is_aborted,
+                            is_green = data.is_green;
 
-                                return is_red ? '<font class="bad">\u2717</font>' :
-                                      (is_green ? '<font class="good">\u2713</font>' :
-                                       '---' );
-                            }
-                        },
-                        timestamp: {
-                            caption: "Last Updated",
-                            renderer: function(key, data){
-                                return data[key] || '---';
-                            }
-                        },
-                        "": {
-                            renderer: function(key, data){
-                                return '<ul class="shortcuts"><li>' + [
-                                    '<a href="#project-info" class="btn icon project-info" title="Project Info"></a>',
-                                    '<a href="#unsubscribe" class="btn icon project-unsubscribe" title="Unsubscribe"></a>'
-                                ].join('</li><li>') + '</li></ul>';
-                            }
+                            return is_red ? '<font class="bad">\u2717</font>' :
+                                  (is_green ? '<font class="good">\u2713</font>' :
+                                   '---' );
+                        }
+                    },
+                    timestamp: {
+                        caption: "Last Updated",
+                        renderer: function(key, data){
+                            return data[key] || '---';
+                        }
+                    },
+                    "": {
+                        renderer: function(key, data){
+                            return util.format('<ul class="shortcuts" data-device-id="%s"><li>', deviceId) + [
+                                '<a href="#device-info" class="btn icon device-info" title="Device Info"></a>',
+                                '<a href="#project-info" class="btn icon project-info" title="Project Info"></a>',
+                                '<a href="#unsubscribe" class="btn icon project-unsubscribe" title="Unsubscribe"></a>'
+                            ].join('</li><li>') + '</li></ul>';
                         }
                     }
-                });
+                }
             });
         }
         else { // show json encoded:
@@ -163,6 +164,16 @@ exports.subscription = function(req, res) {
                 text: util.inspect(subscription)
             });
         }
+    });
+};
+
+exports.info = function(req, res) {
+    var deviceId = req.param('id');
+
+    res.render('page', {
+        jsModule: 'app/device/info',
+        title: 'Device Info Page',
+        text: util.format('This page will contain more detailed information about device (%s)', deviceId)
     });
 };
 
