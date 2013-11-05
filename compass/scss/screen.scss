@@ -88,6 +88,9 @@ a {
        &.device-delete:before {
           @include device-sprite(delete);
        }
+       &.device-subscription:before {
+          @include device-sprite(subscription);
+       }
        &.device-info:before {
           @include device-sprite(info);
        }

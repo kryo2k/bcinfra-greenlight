@@ -33,6 +33,11 @@ exports.register = function(req, res){
             res.render('page', {
                 jsModule: 'app/device/register',
                 title: 'Device Register Page',
+                links: [
+                    {label: "Device Subscriptions", icon: 'device-subscription', href: util.format("/device/subscription/%s?prettyPrint=1",deviceId)},
+                    {label: "Device Config", icon: 'device-configure', href: util.format("/device/config-show/%s?prettyPrint=1",deviceId)},
+                    {label: "Device Info", icon: 'device-info', href: util.format("/device/info/%s?prettyPrint=1",deviceId)}
+                ],
                 text: util.format('Unique device id: %s', deviceId)
             });
         });
@@ -116,7 +121,7 @@ exports.subscription = function(req, res) {
             //  form: html,
                 message: msg,
                 links: [
-                    {label: "Device config", icon: 'device-configure', href: util.format("/device/config-show/%s?prettyPrint=1",deviceId)},
+                    {label: "Device Config", icon: 'device-configure', href: util.format("/device/config-show/%s?prettyPrint=1",deviceId)},
                     {label: "Device Info", icon: 'device-info', href: util.format("/device/info/%s?prettyPrint=1",deviceId)}
                 ],
                 footer: (isSubscriptionGreen ? "Subscription has <font class='good'>green</font> light" : "Subscription is <font class='bad'>failing</font>"),
@@ -203,7 +208,8 @@ exports.listAll = function(req, res){
                         colClass: "row-id"
                     },
                     unique_id: {
-                        caption: "Unique ID"
+                        caption: "Unique ID",
+                        colClass: "device-id"
                     },
                     registered: {
                         caption: "Registered"
@@ -212,6 +218,7 @@ exports.listAll = function(req, res){
                         renderer: function(key, data){
                             return '<ul class="shortcuts"><li>' + [
                                 '<a href="#device-config" class="btn icon device-configure" title="Device Config"></a>',
+                                '<a href="#device-subscription" class="btn icon device-subscription" title="Device Subscriptions"></a>',
                                 '<a href="#device-info" class="btn icon device-info" title="Device Info"></a>',
                                 '<a href="#remove-device" class="btn icon device-delete" title="Remove Device"></a>'
                             ].join('</li><li>') + '</li></ul>';

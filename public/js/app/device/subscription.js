@@ -4,7 +4,7 @@ define(['jquery'],function($){
     // hook into table row links:
     $('table tbody .shortcuts').each(function(){
         var el = this, $el = $(el), projectId = $el.parent().siblings("td.row-id").html(),
-        deviceId = $el.attr('data-device-id'), createShortcutEvtHandler = function(destUrl){
+        createShortcutEvtHandler = function(destUrl){
             return function(evt){
                 evt.preventDefault();
                 window.location.href = destUrl;
