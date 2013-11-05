@@ -15,11 +15,6 @@ CREATE TABLE "project_history" (
   "timestamp" TIMESTAMP NOT NULL
 );
 
-CREATE TRIGGER "cleanup_project_history" BEFORE DELETE ON "project"
-  FOR EACH ROW BEGIN
-    DELETE FROM "project_history" WHERE "project_history"."project_id" = OLD."id";
-  END;
-
 CREATE TABLE "device" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "unique_id" TEXT NOT NULL,
@@ -40,7 +35,22 @@ CREATE TABLE "device_subscription" (
   UNIQUE("device_id","project_id") ON CONFLICT REPLACE
 );
 
+CREATE TRIGGER "cleanup_project_history" BEFORE DELETE ON "project"
+  FOR EACH ROW BEGIN
+    DELETE FROM "project_history" WHERE "project_id" = OLD."id";
+  END;
+  
+CREATE TRIGGER "cleanup_project_subscriptions" BEFORE DELETE ON "project"
+  FOR EACH ROW BEGIN
+    DELETE FROM "device_subscription" WHERE "project_id" = OLD."id";
+  END;
+
 CREATE TRIGGER "cleanup_device_setting" BEFORE DELETE ON "device"
   FOR EACH ROW BEGIN
-    DELETE FROM "device_setting" WHERE "device_setting"."device_id" = OLD."id";
+    DELETE FROM "device_setting" WHERE "device_id" = OLD."id";
+  END;
+
+CREATE TRIGGER "cleanup_device_subscriptions" BEFORE DELETE ON "device"
+  FOR EACH ROW BEGIN
+    DELETE FROM "device_subscription" WHERE "device_id" = OLD."id";
   END;

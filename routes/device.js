@@ -31,6 +31,7 @@ exports.register = function(req, res){
         dbstore.updateDeviceConfig(deviceId, defaultDeviceConfig(), function(){
 
             res.render('page', {
+                jsModule: 'app/device/register',
                 title: 'Device Register Page',
                 text: util.format('Unique device id: %s', deviceId)
             });
@@ -108,9 +109,7 @@ exports.subscription = function(req, res) {
 
             req.app.render("form",formSetup,function(err, html){
                 res.render('page-table-grid', {
-                    scripts: [
-                      'device/subscription.js'
-                    ],
+                    jsModule: 'app/device/subscription',
                     title: title,
                     data: subscription,
                     form: html,
@@ -118,7 +117,8 @@ exports.subscription = function(req, res) {
                     footer: (isSubscriptionGreen ? "Subscription has <font color='green'>green</font> light" : "Subscription is <font color='red'>failing</font>"),
                     columns: {
                         id: {
-                            caption: "ID"
+                            caption: "ID",
+                            colClass: "row-id"
                         },
                         name: {
                             caption: "Project Name"
@@ -141,6 +141,15 @@ exports.subscription = function(req, res) {
                             renderer: function(key, data){
                                 return data[key] || '---';
                             }
+                        },
+                        shortcuts: {
+                            caption: "Shortcuts",
+                            renderer: function(key, data){
+                                return '<ul class="shortcuts"><li>' + [
+                                    '<a href="#project-info">Project Info</a>',
+                                    '<a href="#unsubscribe">Unsubscribe</a>'
+                                ].join('</li><li>') + '</li></ul>';
+                            }
                         }
                     }
                 });
@@ -148,6 +157,7 @@ exports.subscription = function(req, res) {
         }
         else { // show json encoded:
             res.render('page', {
+                jsModule: 'app/device/subscription',
                 title: title,
                 message: msg,
                 footer: util.inspect({isSubscriptionGreen: isSubscriptionGreen}),
@@ -171,23 +181,35 @@ exports.listAll = function(req, res){
 
         if(prettyPrint) { // show as a pretty hash table:
             res.render('page-table-grid', {
+                jsModule: 'app/device/list',
                 title: title,
                 data: devices,
                 columns: {
                     id: {
-                        caption: "ID"
+                        caption: "ID",
+                        colClass: "row-id"
                     },
                     unique_id: {
                         caption: "Unique ID"
                     },
                     registered: {
                         caption: "Registered"
+                    },
+                    shortcuts: {
+                        caption: "Shortcuts",
+                        renderer: function(key, data){
+                            return '<ul class="shortcuts"><li>' + [
+                                '<a href="#info-info">Device Info</a>',
+                                '<a href="#remove-device">Remove Device</a>'
+                            ].join('</li><li>') + '</li></ul>';
+                        }
                     }
                 }
             });
         }
         else { // show json encoded:
             res.render('page', {
+                jsModule: 'app/device/list',
                 title: title,
                 text: util.inspect(devices)
             });
@@ -213,6 +235,7 @@ exports.showConfig = function(req, res){
 
         if(prettyPrint) { // show as a pretty hash table:
             res.render('page-table-hash', {
+                jsModule: 'app/device/config-show',
                 title: title,
                 data: config,
                 columns: {
@@ -227,6 +250,7 @@ exports.showConfig = function(req, res){
         }
         else { // show json encoded:
             res.render('page', {
+                jsModule: 'app/device/config-show',
                 title: title,
                 text: util.inspect(config)
             });
@@ -251,6 +275,7 @@ exports.updateConfig = function(req, res){
         }
 
         res.render('page', {
+            jsModule: 'app/device/config-update',
             title: title,
             text: util.format('Configuration for "%s" was %s!', deviceId, (replace ? "replaced" : "updated"))
         });

@@ -1,5 +1,5 @@
 {
-  "name": "BcInfra Greenlight",
+  "name": "bcinfra-greenlight",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,6 +7,10 @@
   },
   "dependencies": {
     "express": "3.2.6",
-    "jade": "*"
+    "jade": "*",
+    "connect": "2.11.0",
+    "winston": "0.7.2",
+    "xmldom": "0.1.16",
+    "xpath": "0.0.5"
   }
 }

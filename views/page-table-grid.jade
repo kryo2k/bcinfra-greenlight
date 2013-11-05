@@ -5,9 +5,9 @@ block inner-content
     thead
       tr
         each opts, key in columns
-          td(width=opts.width)= opts.caption || key
+          td(width=opts.width, class=opts.colClass)= opts.caption || key
     tbody
       each item, i in data
         tr
           each opts, key in columns
-            td(class=opts.class, data-align=opts.align)!= opts.renderer ? opts.renderer(key, item) : item[key]
+            td(class=opts.class, data-align=opts.align, class=opts.colClass)!= opts.renderer ? opts.renderer(key, item) : item[key]

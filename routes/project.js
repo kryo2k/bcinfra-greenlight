@@ -17,6 +17,7 @@ exports.listAll = function(req, res){
 
         if(prettyPrint) { // show as a pretty hash table:
             res.render('page-table-grid', {
+                jsModule: 'app/project/list',
                 title: title,
                 data: projects,
                 columns: {
@@ -44,12 +45,22 @@ exports.listAll = function(req, res){
                         renderer: function(key, data){
                             return data[key] || '---';
                         }
+                    },
+                    shortcuts: {
+                        caption: "Shortcuts",
+                        renderer: function(key, data){
+                            return '<ul class="shortcuts"><li>' + [
+                                '<a href="#project-info">Project Info</a>',
+                                '<a href="#remove-project">Remove Project</a>'
+                            ].join('</li><li>') + '</li></ul>';
+                        }
                     }
                 }
             });
         }
         else { // show json encoded:
             res.render('page', {
+                jsModule: 'app/project/list',
                 title: title,
                 text: util.inspect(projects)
             });

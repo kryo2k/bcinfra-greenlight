@@ -1,5 +1,4 @@
 var express = require('express')
-  , requirejsMiddleware = require("requirejs-middleware")
   , connect = require('connect')
   , routes = require('./routes')
   , log = require('./lib/log')
@@ -23,10 +22,8 @@ app.use(new log.expressLogger());
 app.use(connect.urlencoded());
 app.use(connect.json());
 app.use(express.methodOverride());
-app.use(requirejsMiddleware(config.requireJs));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'build')));
 
 // output the current environment settings to log:
 log.debug("Current Environment:", app.get('env'));

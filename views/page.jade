@@ -1,10 +1,7 @@
 extends layout
 
 block head
-  script(type="text/javascript", src="/js/app.js")
-  if scripts
-    each href, i in scripts
-      script(type="text/javascript", src="/js/" + href)
+  script(type="text/javascript", data-main="/js/app", data-invoke-module=jsModule, src="/js/requirejs.js")
 
 block content
   h1= title
