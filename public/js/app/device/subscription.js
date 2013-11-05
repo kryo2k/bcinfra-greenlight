@@ -11,7 +11,6 @@ define(['jquery'],function($){
             };
         };
 
-        $el.find('a[href="#device-info"]').click(createShortcutEvtHandler("/device/info/" + deviceId + '?prettyPrint=1'));
         $el.find('a[href="#project-info"]').click(createShortcutEvtHandler("/project/info/" + projectId + '?prettyPrint=1'));
         $el.find('a[href="#unsubscribe"]').click(createShortcutEvtHandler("?prettyPrint=1&remove=" + projectId));
     });

@@ -5,8 +5,15 @@ block head
 
 block content
   h1= title
-  if message
-    .message= message
+  block page-links
+    if links
+      ul.links
+        each link, i in links
+          li
+            a(href=link.href, class=link.icon ? "btn-withtext icon " + link.icon + (link.class?" " + link.class : "") : link.class)!= link.label
+  block page-message
+    if message
+      .message= message
   block inner-content
     p!= text
   block form-content

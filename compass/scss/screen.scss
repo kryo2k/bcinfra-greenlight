@@ -51,6 +51,86 @@ p {
         color: orange;
     }
 }
+a {
+    color: white;
+    text-decoration: none;
+    margin: 0 0 0 0.5em;
+
+    &.btn, &.btn-withtext {
+        @include border-radius(0.3rem);
+        display: block;
+        width: 16px;
+        height: 16px;
+        padding: 0.3rem;
+        background-color: silver;
+    }
+    &.btn-withtext {
+        width: auto;
+        height: auto;
+        color: grey;
+        font-size: 0.8rem;
+    }
+    &.icon {
+       position: relative;
+
+       &:before {
+           @include opacity(0.6);
+           display: block;
+           width: 16px;
+           height: 16px;
+           margin: 0 auto 0.2rem;
+           content: "";
+       }
+
+       &.device-configure:before {
+          @include device-sprite(configure);
+       }
+       &.device-delete:before {
+          @include device-sprite(delete);
+       }
+       &.device-info:before {
+          @include device-sprite(info);
+       }
+       &.project-delete:before {
+          @include project-sprite(delete);
+       }
+       &.project-info:before {
+          @include project-sprite(info);
+       }
+       &.project-unsubscribe:before {
+          @include project-sprite(unsubscribe);
+       }
+    }
+    &:hover {
+        &:before {
+           @include opacity(1);
+        }
+        &.btn, &.btn-withtext {
+            background-color: orange;
+        }
+        &.btn-withtext {
+            color: black;
+        }
+    }
+}
+ul.shortcuts,
+ul.links {
+    white-space: nowrap;
+
+    li {
+        display: inline-block;
+    }
+}
+ul.links {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    margin: 0 0 0.5rem 0;
+
+    a {
+        margin: 0 0.5rem 0 0;
+    }
+}
 .trace {
     padding-left: 1rem;
     font-family: monospace;
@@ -61,64 +141,6 @@ p {
 }
 .good {
     color: grey;
-}
-
-ul.shortcuts {
-    white-space: nowrap;
-
-    li {
-        display: inline-block;
-
-        a {
-            color: white;
-            text-decoration: none;
-            margin: 0 0 0 0.5em;
-
-            &.btn {
-                @include border-radius(0.3rem);
-                display: block;
-                width: 16px;
-                height: 16px;
-                padding: 0.3rem;
-                background-color: silver;
-            }
-            &.icon {
-               position: relative;
-
-               &:before {
-                   display: block;
-                   width: 16px;
-                   height: 16px;
-                   margin: 0 auto;
-                   content: "";
-               }
-
-               &.device-delete:before {
-                  @include device-sprite(delete);
-               }
-               &.device-info:before {
-                  @include device-sprite(info);
-               }
-               &.project-delete:before {
-                  @include project-sprite(delete);
-               }
-               &.project-info:before {
-                  @include project-sprite(info);
-               }
-               &.project-unsubscribe:before {
-                  @include project-sprite(unsubscribe);
-               }
-            }
-            &:hover {
-                text-decoration: underline;
-
-                &.btn {
-                    color: black;
-                    background-color: orange;
-                }
-            }
-        }
-    }
 }
 table {
     display: inline-block;

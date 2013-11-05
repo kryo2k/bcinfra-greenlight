@@ -115,6 +115,10 @@ exports.subscription = function(req, res) {
                 data: subscription,
             //  form: html,
                 message: msg,
+                links: [
+                    {label: "Device config", icon: 'device-configure', href: util.format("/device/config-show/%s?prettyPrint=1",deviceId)},
+                    {label: "Device Info", icon: 'device-info', href: util.format("/device/info/%s?prettyPrint=1",deviceId)}
+                ],
                 footer: (isSubscriptionGreen ? "Subscription has <font class='good'>green</font> light" : "Subscription is <font class='bad'>failing</font>"),
                 columns: {
                     id: {
@@ -146,7 +150,6 @@ exports.subscription = function(req, res) {
                     "": {
                         renderer: function(key, data){
                             return util.format('<ul class="shortcuts" data-device-id="%s"><li>', deviceId) + [
-                                '<a href="#device-info" class="btn icon device-info" title="Device Info"></a>',
                                 '<a href="#project-info" class="btn icon project-info" title="Project Info"></a>',
                                 '<a href="#unsubscribe" class="btn icon project-unsubscribe" title="Unsubscribe"></a>'
                             ].join('</li><li>') + '</li></ul>';
@@ -208,7 +211,8 @@ exports.listAll = function(req, res){
                     "": {
                         renderer: function(key, data){
                             return '<ul class="shortcuts"><li>' + [
-                                '<a href="#info-info" class="btn icon device-info" title="Device Info"></a>',
+                                '<a href="#device-config" class="btn icon device-configure" title="Device Config"></a>',
+                                '<a href="#device-info" class="btn icon device-info" title="Device Info"></a>',
                                 '<a href="#remove-device" class="btn icon device-delete" title="Remove Device"></a>'
                             ].join('</li><li>') + '</li></ul>';
                         }
