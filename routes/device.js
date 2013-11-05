@@ -114,7 +114,7 @@ exports.subscription = function(req, res) {
                     data: subscription,
                     form: html,
                     message: msg,
-                    footer: (isSubscriptionGreen ? "Subscription has <font color='green'>green</font> light" : "Subscription is <font color='red'>failing</font>"),
+                    footer: (isSubscriptionGreen ? "Subscription has <font class='good'>green</font> light" : "Subscription is <font class='bad'>failing</font>"),
                     columns: {
                         id: {
                             caption: "ID",
@@ -142,12 +142,11 @@ exports.subscription = function(req, res) {
                                 return data[key] || '---';
                             }
                         },
-                        shortcuts: {
-                            caption: "Shortcuts",
+                        "": {
                             renderer: function(key, data){
                                 return '<ul class="shortcuts"><li>' + [
-                                    '<a href="#project-info">Project Info</a>',
-                                    '<a href="#unsubscribe">Unsubscribe</a>'
+                                    '<a href="#project-info" class="btn icon project-info" title="Project Info"></a>',
+                                    '<a href="#unsubscribe" class="btn icon project-unsubscribe" title="Unsubscribe"></a>'
                                 ].join('</li><li>') + '</li></ul>';
                             }
                         }
@@ -195,12 +194,11 @@ exports.listAll = function(req, res){
                     registered: {
                         caption: "Registered"
                     },
-                    shortcuts: {
-                        caption: "Shortcuts",
+                    "": {
                         renderer: function(key, data){
                             return '<ul class="shortcuts"><li>' + [
-                                '<a href="#info-info">Device Info</a>',
-                                '<a href="#remove-device">Remove Device</a>'
+                                '<a href="#info-info" class="btn icon device-info" title="Device Info"></a>',
+                                '<a href="#remove-device" class="btn icon device-delete" title="Remove Device"></a>'
                             ].join('</li><li>') + '</li></ul>';
                         }
                     }

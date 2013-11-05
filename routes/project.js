@@ -46,12 +46,11 @@ exports.listAll = function(req, res){
                             return data[key] || '---';
                         }
                     },
-                    shortcuts: {
-                        caption: "Shortcuts",
+                    "": {
                         renderer: function(key, data){
                             return '<ul class="shortcuts"><li>' + [
-                                '<a href="#project-info">Project Info</a>',
-                                '<a href="#remove-project">Remove Project</a>'
+                                '<a href="#project-info" class="btn icon project-info" title="Project Info"></a>',
+                                '<a href="#remove-project" class="btn icon project-delete" title="Remove Project"></a>'
                             ].join('</li><li>') + '</li></ul>';
                         }
                     }

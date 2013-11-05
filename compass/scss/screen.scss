@@ -1,5 +1,9 @@
 @import "compass/reset";
+@import "compass/css3";
+@import "compass/typography/text/replacement";
 @import url(http://fonts.googleapis.com/css?family=Share+Tech);
+@import "icon/project/*.png";
+@import "icon/device/*.png";
 
 body, html {
     position: absolute;
@@ -52,6 +56,70 @@ p {
     font-family: monospace;
     white-space: pre;
 }
+.bad {
+    color: red;
+}
+.good {
+    color: grey;
+}
+
+ul.shortcuts {
+    white-space: nowrap;
+
+    li {
+        display: inline-block;
+
+        a {
+            color: white;
+            text-decoration: none;
+            margin: 0 0 0 0.5em;
+
+            &.btn {
+                @include border-radius(0.3rem);
+                display: block;
+                width: 16px;
+                height: 16px;
+                padding: 0.3rem;
+                background-color: silver;
+            }
+            &.icon {
+               position: relative;
+
+               &:before {
+                   display: block;
+                   width: 16px;
+                   height: 16px;
+                   margin: 0 auto;
+                   content: "";
+               }
+
+               &.device-delete:before {
+                  @include device-sprite(delete);
+               }
+               &.device-info:before {
+                  @include device-sprite(info);
+               }
+               &.project-delete:before {
+                  @include project-sprite(delete);
+               }
+               &.project-info:before {
+                  @include project-sprite(info);
+               }
+               &.project-unsubscribe:before {
+                  @include project-sprite(unsubscribe);
+               }
+            }
+            &:hover {
+                text-decoration: underline;
+
+                &.btn {
+                    color: black;
+                    background-color: orange;
+                }
+            }
+        }
+    }
+}
 table {
     display: inline-block;
     margin: 0 0 1rem 0;
@@ -70,13 +138,6 @@ table {
     tbody {
         border: 0 solid white;
         border-width: 0 2px 2px;
-        
-        .bad {
-            color: red;
-        }
-        .good {
-            color: grey;
-        }
 
         td {
             padding: 0.2rem 0.5rem;
