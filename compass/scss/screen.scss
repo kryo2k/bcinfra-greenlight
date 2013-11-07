@@ -63,6 +63,14 @@ a {
         height: 16px;
         padding: 0.3rem;
         background-color: silver;
+        background-image: linear-gradient(color-stops(
+           transparent,
+           #f0f0f0 10%,
+           #e5e5e5 49%,
+           #e0e0e0 50%,
+           #d5d5d5 90%,
+           transparent
+        ));
     }
     &.btn-withtext {
         width: auto;
@@ -82,6 +90,12 @@ a {
            content: "";
        }
 
+       &.device-list:before {
+          @include device-sprite(list);
+       }
+       &.device-register:before {
+          @include device-sprite(register);
+       }
        &.device-configure:before {
           @include device-sprite(configure);
        }
@@ -93,6 +107,9 @@ a {
        }
        &.device-info:before {
           @include device-sprite(info);
+       }
+       &.project-list:before {
+          @include project-sprite(list);
        }
        &.project-delete:before {
           @include project-sprite(delete);
@@ -110,6 +127,14 @@ a {
         }
         &.btn, &.btn-withtext {
             background-color: orange;
+            background-image: linear-gradient(color-stops(
+               transparent,
+               #ffce79 10%,
+               #ffbb46 49%,
+               #f7A00A 50%,
+               #ffbc46 90%,
+               transparent
+            ));
         }
         &.btn-withtext {
             color: black;

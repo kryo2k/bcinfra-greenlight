@@ -12,9 +12,9 @@ define(['jquery'],function($){
             };
         };
 
-        $el.find('a[href="#device-config"]').click(createShortcutEvtHandler("/device/config-show/" + deviceId + '?prettyPrint=1'));
+        $el.find('a[href="#device-config"]').click(createShortcutEvtHandler("/device/config/" + deviceId + '?prettyPrint=1'));
         $el.find('a[href="#device-subscription"]').click(createShortcutEvtHandler("/device/subscription/" + deviceId + '?prettyPrint=1'));
         $el.find('a[href="#device-info"]').click(createShortcutEvtHandler("/device/info/" + deviceId + '?prettyPrint=1'));
-        $el.find('a[href="#remove-device"]').click(createShortcutEvtHandler("/device/remove/" + deviceId));
+        $el.find('a[href="#remove-device"]').click(createShortcutEvtHandler("/device/remove/" + deviceId + "?prettyPrint=1"));
     });
 });

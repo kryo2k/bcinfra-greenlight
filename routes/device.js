@@ -34,13 +34,32 @@ exports.register = function(req, res){
                 jsModule: 'app/device/register',
                 title: 'Device Register Page',
                 links: [
+                    {label: "List Devices", icon: 'device-list', href: "/device/list?prettyPrint=1"},
                     {label: "Device Subscriptions", icon: 'device-subscription', href: util.format("/device/subscription/%s?prettyPrint=1",deviceId)},
-                    {label: "Device Config", icon: 'device-configure', href: util.format("/device/config-show/%s?prettyPrint=1",deviceId)},
+                    {label: "Device Config", icon: 'device-configure', href: util.format("/device/config/%s?prettyPrint=1",deviceId)},
                     {label: "Device Info", icon: 'device-info', href: util.format("/device/info/%s?prettyPrint=1",deviceId)}
                 ],
                 text: util.format('Unique device id: %s', deviceId)
             });
         });
+    });
+};
+
+// removes a device
+exports.remove = function(req, res){
+    var title = "Device Removal Page", pPrint = req.param('prettyPrint');
+    dbstore.removeDevice(req.param("id"), function(err, deviceId, removed){
+
+        if(!err) {
+            res.redirect("/device/list?prettyPrint="+(pPrint ? "1" : "0"));
+        }
+        else {
+            res.render('error', {
+                jsModule: 'app/device/remove',
+                title: title,
+                error: err
+            });
+        }
     });
 };
 
@@ -121,7 +140,9 @@ exports.subscription = function(req, res) {
             //  form: html,
                 message: msg,
                 links: [
-                    {label: "Device Config", icon: 'device-configure', href: util.format("/device/config-show/%s?prettyPrint=1",deviceId)},
+                    {label: "List Devices", icon: 'device-list', href: "/device/list?prettyPrint=1"},
+                    {label: "New Device", icon: 'device-register', href: "/device/register?prettyPrint=1"},
+                    {label: "Device Config", icon: 'device-configure', href: util.format("/device/config/%s?prettyPrint=1",deviceId)},
                     {label: "Device Info", icon: 'device-info', href: util.format("/device/info/%s?prettyPrint=1",deviceId)}
                 ],
                 footer: (isSubscriptionGreen ? "Subscription has <font class='good'>green</font> light" : "Subscription is <font class='bad'>failing</font>"),
@@ -202,6 +223,10 @@ exports.listAll = function(req, res){
                 jsModule: 'app/device/list',
                 title: title,
                 data: devices,
+                links: [
+                    {label: "New Device", icon: 'device-register', href: "/device/register?prettyPrint=1"},
+                    {label: "List Projects", icon: 'project-list', href: "/project/list?prettyPrint=1"}
+                ],
                 columns: {
                     id: {
                         caption: "ID",
@@ -255,7 +280,7 @@ exports.showConfig = function(req, res){
 
         if(prettyPrint) { // show as a pretty hash table:
             res.render('page-table-hash', {
-                jsModule: 'app/device/config-show',
+                jsModule: 'app/device/config',
                 title: title,
                 data: config,
                 columns: {
@@ -270,7 +295,7 @@ exports.showConfig = function(req, res){
         }
         else { // show json encoded:
             res.render('page', {
-                jsModule: 'app/device/config-show',
+                jsModule: 'app/device/config',
                 title: title,
                 text: util.inspect(config)
             });
@@ -303,6 +328,7 @@ exports.updateConfig = function(req, res){
     
     if(numberOfProperties(config) === 0) {
         onComplete("No configuration provided to update.");
+        return;
     }
 
     if(replace) {
@@ -311,4 +337,8 @@ exports.updateConfig = function(req, res){
     else {
         dbstore.updateDeviceConfig(deviceId, config, onComplete);
     }
+};
+
+exports.configure = function(req, res) {
+    // TODO: meld show + update config.
 };

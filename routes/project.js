@@ -13,6 +13,16 @@ exports.info = function(req, res) {
     });
 };
 
+exports.remove = function(req, res) {
+    var projectId = req.param('id');
+
+    res.render('page', {
+        jsModule: 'app/project/info',
+        title: 'Project Removal Page',
+        text: util.format('This page will remove project (%d) and it\'s history', projectId)
+    });
+};
+
 // lists all registered projects
 exports.listAll = function(req, res){
     var
@@ -30,12 +40,17 @@ exports.listAll = function(req, res){
                 jsModule: 'app/project/list',
                 title: title,
                 data: projects,
+                links: [
+                    {label: "List Devices", icon: 'device-list', href: "/device/list?prettyPrint=1"}
+                ],
                 columns: {
                     id: {
-                        caption: "ID"
+                        caption: "ID",
+                        colClass: "row-id"
                     },
                     name: {
-                        caption: "Name"
+                        caption: "Name",
+                        colClass: "project-name"
                     },
                     lastStatus: {
                         caption: "Status",

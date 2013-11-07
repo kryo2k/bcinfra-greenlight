@@ -53,12 +53,14 @@ else { // production error handling:
 // configure routes for express http server:
 app.get('/', routes.index);
 app.get('/project/info/:id', project.info);
+app.get('/project/remove/:id', project.remove);
 app.get('/project/list', project.listAll);
 app.get('/device/info/:id', device.info);
 app.get('/device/list', device.listAll);
 app.get('/device/register', device.register);
+app.get('/device/remove/:id', device.remove);
 app.get('/device/subscription/:id', device.subscription);
-app.get('/device/config-show/:id', device.showConfig);
+app.get('/device/config/:id', device.showConfig);
 app.get('/device/config-update/:id', device.updateConfig);
 
 // background watcher process -- checks hudson for project updates.
