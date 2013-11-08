@@ -10,6 +10,20 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+util.requestIsPrettyPrint = function(req){
+    return parseInt(req.param("prettyPrint"), 10) === 1;
+};
+
+util.projectStateRenderer = function(key, data){
+    var
+    is_red = data.is_broken || data.is_aborted,
+    is_green = data.is_green;
+
+    return is_red ? '<font class="bad">\u2717</font>' :
+          (is_green ? '<font class="good">\u2713</font>' :
+           '---' );
+};
+
 var app = express();
 
 // all environments

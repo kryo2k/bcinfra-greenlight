@@ -4,22 +4,98 @@ dbstore = require(__dirname + "/../lib/dbstore.js"),
 log = require(__dirname + '/../lib/log');
 
 exports.info = function(req, res) {
-    var projectId = req.param('id');
+    var 
+    title = "Project Info",
+    projectId = req.param('id');
 
-    res.render('page', {
-        jsModule: 'app/project/info',
-        title: 'Project Info Page',
-        text: util.format('This page will contain more detailed information about project (%d)', projectId)
+    dbstore.getProjectInfo(projectId, function(err, history){
+        if(err) {
+            res.status(404).render('error', {
+                title: title,
+                error: err
+            });
+            return;
+        }
+
+        var
+        sample = history[0]||{},
+        renderBool = function(key, data){
+            return data[key] ?
+                "<font color='white'>\u2713</font>" :
+                "<font color='#444'>\u2717</font>";
+        };
+
+        title = util.format("Project Info (%s: %d)", sample.name, sample.id);
+
+        if(util.requestIsPrettyPrint(req)) {
+            res.render('page-table-grid', {
+                jsModule: 'app/project/info',
+                title: title,
+                data: history,
+                links: [
+                    {label: "List Projects", icon: 'project-list', href: "/project/list?prettyPrint=1"}
+                ],
+                columns: {
+                    is_broken: {
+                        caption: "Broken",
+                        align: "center",
+                        renderer: renderBool
+                    },
+                    is_aborted: {
+                        caption: "Aborted",
+                        align: "center",
+                        renderer: renderBool
+                    },
+                    is_stable: {
+                        caption: "Stable",
+                        align: "center",
+                        renderer: renderBool
+                    },
+                    is_green: {
+                        caption: "Green",
+                        align: "center",
+                        renderer: renderBool
+                    },
+                    lastStatus: {
+                        caption: "Status",
+                        align: "center",
+                        renderer: util.projectStateRenderer
+                    },
+                    timestamp: {
+                        caption: "Event Time",
+                        renderer: function(key, data){
+                            return data[key] || '---';
+                        }
+                    }
+                }
+            });
+        }
+        else {
+            res.render('page', {
+                jsModule: 'app/project/info',
+                title: title,
+                text: util.inspect(history)
+            });
+        }
     });
 };
 
 exports.remove = function(req, res) {
-    var projectId = req.param('id');
+    var title = "Project Removal Page",
+    pPrint = req.param('prettyPrint');
 
-    res.render('page', {
-        jsModule: 'app/project/info',
-        title: 'Project Removal Page',
-        text: util.format('This page will remove project (%d) and it\'s history', projectId)
+    dbstore.removeProject(req.param('id'), function(err, projectId, removed){
+
+        if(!err) {
+            res.redirect("/project/list?prettyPrint="+(pPrint ? "1" : "0"));
+        }
+        else {
+            res.render('error', {
+                jsModule: 'app/project/remove',
+                title: title,
+                error: err
+            });
+        }
     });
 };
 
