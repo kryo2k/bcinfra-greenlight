@@ -8,12 +8,38 @@ var express = require('express')
   , device = require('./routes/device')
   , util = require('util')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , url = require('url')
+  , extend = require('extend');
 
+util.alterUrl = function(urlStr, alter) {
+    var
+    altered = url.parse(urlStr, true);
+
+    delete altered.href;
+    delete altered.host;
+    delete altered.path;
+    delete altered.search;
+
+    extend(true, altered, alter);
+
+    return url.format(altered);
+};
+
+util.prettyPrintURL = function(url, prettyPrint) {
+    if(prettyPrint === undefined) {
+        prettyPrint = true;
+    }
+
+    return util.alterUrl(url, {
+        query: {
+            prettyPrint: prettyPrint ? "1" : "0"
+        }
+    });
+};
 util.requestIsPrettyPrint = function(req){
     return parseInt(req.param("prettyPrint"), 10) === 1;
 };
-
 util.projectStateRenderer = function(key, data){
     var
     is_red = data.is_broken || data.is_aborted,

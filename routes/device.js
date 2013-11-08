@@ -34,10 +34,14 @@ exports.register = function(req, res){
                 jsModule: 'app/device/register',
                 title: 'Device Register Page',
                 links: [
-                    {label: "List Devices", icon: 'device-list', href: "/device/list?prettyPrint=1"},
-                    {label: "Device Subscriptions", icon: 'device-subscription', href: util.format("/device/subscription/%s?prettyPrint=1",deviceId)},
-                    {label: "Device Config", icon: 'device-configure', href: util.format("/device/config/%s?prettyPrint=1",deviceId)},
-                    {label: "Device Info", icon: 'device-info', href: util.format("/device/info/%s?prettyPrint=1",deviceId)}
+                    {label: "List Devices", icon: 'device-list',
+                        href: util.prettyPrintURL("/device/list") },
+                    {label: "Device Subscriptions", icon: 'device-subscription',
+                        href: util.prettyPrintURL(util.format("/device/subscription/%s",deviceId))},
+                    {label: "Device Config", icon: 'device-configure',
+                        href: util.prettyPrintURL(util.format("/device/config/%s",deviceId))},
+                    {label: "Device Info", icon: 'device-info',
+                        href: util.prettyPrintURL(util.format("/device/info/%s",deviceId))}
                 ],
                 text: util.format('Unique device id: %s', deviceId)
             });
@@ -47,11 +51,11 @@ exports.register = function(req, res){
 
 // removes a device
 exports.remove = function(req, res){
-    var title = "Device Removal Page", pPrint = req.param('prettyPrint');
+    var title = "Device Removal Page";
     dbstore.removeDevice(req.param("id"), function(err, deviceId, removed){
 
         if(!err) {
-            res.redirect("/device/list?prettyPrint="+(pPrint ? "1" : "0"));
+            res.redirect(util.prettyPrintURL("/device/list",util.requestIsPrettyPrint(req)));
         }
         else {
             res.render('error', {
@@ -71,7 +75,6 @@ exports.subscription = function(req, res) {
     addProjectId = req.param('add'),
     removeProjectId = req.param('remove'),
     clearAll = req.param('clearAll') == 1,
-    prettyPrint = (parseInt(req.param("prettyPrint"), 10) === 1),
     subcribeTo = [],
     unsubcribeFrom = [];
 
@@ -117,10 +120,10 @@ exports.subscription = function(req, res) {
         msg = util.format("Device (%s) subscribed to %d project(s)", deviceId, subscription.length),
         isSubscriptionGreen = dbstore.isSubscriptionGreen(subscription);
 
-        if(prettyPrint) { // show as a pretty hash table:
+        if(util.requestIsPrettyPrint(req)) { // show as a pretty hash table:
 
 //            var formSetup = {
-//                action: req.url + '?prettyPrint=1',
+//                action: util.prettyPrintURL(req.url),
 //                method:'GET',
 //                items: [
 //                    {label:'Subscribe to:', type:'list', items: [
@@ -140,10 +143,10 @@ exports.subscription = function(req, res) {
             //  form: html,
                 message: msg,
                 links: [
-                    {label: "List Devices", icon: 'device-list', href: "/device/list?prettyPrint=1"},
-                    {label: "New Device", icon: 'device-register', href: "/device/register?prettyPrint=1"},
-                    {label: "Device Config", icon: 'device-configure', href: util.format("/device/config/%s?prettyPrint=1",deviceId)},
-                    {label: "Device Info", icon: 'device-info', href: util.format("/device/info/%s?prettyPrint=1",deviceId)}
+                    {label: "List Devices", icon: 'device-list', href: util.prettyPrintURL("/device/list")},
+                    {label: "New Device", icon: 'device-register', href: util.prettyPrintURL("/device/register")},
+                    {label: "Device Config", icon: 'device-configure', href: util.prettyPrintURL(util.format("/device/config/%s",deviceId))},
+                    {label: "Device Info", icon: 'device-info', href: util.prettyPrintURL(util.format("/device/info/%s",deviceId))}
                 ],
                 footer: (isSubscriptionGreen ? "Subscription has <font class='good'>green</font> light" : "Subscription is <font class='bad'>failing</font>"),
                 columns: {
@@ -157,15 +160,7 @@ exports.subscription = function(req, res) {
                     lastStatus: {
                         caption: "Status",
                         align: "center",
-                        renderer: function(key, data){
-                            var
-                            is_red = data.is_broken || data.is_aborted,
-                            is_green = data.is_green;
-
-                            return is_red ? '<font class="bad">\u2717</font>' :
-                                  (is_green ? '<font class="good">\u2713</font>' :
-                                   '---' );
-                        }
+                        renderer: util.projectStateRenderer
                     },
                     timestamp: {
                         caption: "Last Updated",
@@ -209,8 +204,7 @@ exports.info = function(req, res) {
 // lists all registered devices
 exports.listAll = function(req, res){
     var
-    devices = [],
-    prettyPrint = (parseInt(req.param("prettyPrint"), 10) === 1);
+    devices = [];
 
     dbstore.getAllDevices(function(err, row){
         devices.push(row);
@@ -218,14 +212,14 @@ exports.listAll = function(req, res){
         var
         title = util.format('Device List (%d)', rowNum);
 
-        if(prettyPrint) { // show as a pretty hash table:
+        if(util.requestIsPrettyPrint(req)) { // show as a pretty hash table:
             res.render('page-table-grid', {
                 jsModule: 'app/device/list',
                 title: title,
                 data: devices,
                 links: [
-                    {label: "New Device", icon: 'device-register', href: "/device/register?prettyPrint=1"},
-                    {label: "List Projects", icon: 'project-list', href: "/project/list?prettyPrint=1"}
+                    {label: "New Device", icon: 'device-register', href: util.prettyPrintURL("/device/register")},
+                    {label: "List Projects", icon: 'project-list', href: util.prettyPrintURL("/project/list")}
                 ],
                 columns: {
                     id: {
@@ -266,7 +260,6 @@ exports.listAll = function(req, res){
 exports.showConfig = function(req, res){
 
     var
-    prettyPrint = (parseInt(req.param("prettyPrint"), 10) === 1),
     title = util.format('Device Config (%s)', req.params.id);
 
     dbstore.getDeviceConfig(req.params.id, function(err, config){
@@ -278,7 +271,7 @@ exports.showConfig = function(req, res){
             return;
         }
 
-        if(prettyPrint) { // show as a pretty hash table:
+        if(util.requestIsPrettyPrint(req)) { // show as a pretty hash table:
             res.render('page-table-hash', {
                 jsModule: 'app/device/config',
                 title: title,

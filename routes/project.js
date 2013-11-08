@@ -33,7 +33,7 @@ exports.info = function(req, res) {
                 title: title,
                 data: history,
                 links: [
-                    {label: "List Projects", icon: 'project-list', href: "/project/list?prettyPrint=1"}
+                    {label: "List Projects", icon: 'project-list', href: util.prettyPrintURL("/project/list")}
                 ],
                 columns: {
                     is_broken: {
@@ -81,13 +81,12 @@ exports.info = function(req, res) {
 };
 
 exports.remove = function(req, res) {
-    var title = "Project Removal Page",
-    pPrint = req.param('prettyPrint');
+    var title = "Project Removal Page";
 
     dbstore.removeProject(req.param('id'), function(err, projectId, removed){
 
         if(!err) {
-            res.redirect("/project/list?prettyPrint="+(pPrint ? "1" : "0"));
+            res.redirect(util.prettyPrintURL("/project/list", util.requestIsPrettyPrint(req)));
         }
         else {
             res.render('error', {
@@ -102,8 +101,7 @@ exports.remove = function(req, res) {
 // lists all registered projects
 exports.listAll = function(req, res){
     var
-    projects = [],
-    prettyPrint = (parseInt(req.param("prettyPrint"), 10) === 1);
+    projects = [];
 
     dbstore.getAllProjects(true, function(err, row){
         projects.push(row);
@@ -111,13 +109,13 @@ exports.listAll = function(req, res){
         var
         title = util.format('Project List (%d)', rowNum);
 
-        if(prettyPrint) { // show as a pretty hash table:
+        if(util.requestIsPrettyPrint(req)) { // show as a pretty hash table:
             res.render('page-table-grid', {
                 jsModule: 'app/project/list',
                 title: title,
                 data: projects,
                 links: [
-                    {label: "List Devices", icon: 'device-list', href: "/device/list?prettyPrint=1"}
+                    {label: "List Devices", icon: 'device-list', href: util.prettyPrintURL("/device/list")}
                 ],
                 columns: {
                     id: {
@@ -131,15 +129,7 @@ exports.listAll = function(req, res){
                     lastStatus: {
                         caption: "Status",
                         align: "center",
-                        renderer: function(key, data){
-                            var
-                            is_red = data.is_broken || data.is_aborted,
-                            is_green = data.is_green;
-
-                            return is_red ? '<font class="bad">\u2717</font>' :
-                                  (is_green ? '<font class="good">\u2713</font>' :
-                                   '---' );
-                        }
+                        renderer: util.projectStateRenderer
                     },
                     timestamp: {
                         caption: "Last Updated",
